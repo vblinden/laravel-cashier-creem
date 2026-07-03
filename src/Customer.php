@@ -2,8 +2,15 @@
 
 namespace Laravel\Cashier\Creem;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property string $creem_id
+ * @property string $email
+ * @property string $name
+ * @property Carbon|null $trial_ends_at
+ */
 class Customer extends Model
 {
     protected $guarded = [];

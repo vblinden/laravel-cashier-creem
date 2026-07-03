@@ -3,10 +3,22 @@
 namespace Laravel\Cashier\Creem;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use InvalidArgumentException;
 use LogicException;
 
+/**
+ * @property string $creem_id
+ * @property string $status
+ * @property string $type
+ * @property Carbon|null $trial_ends_at
+ * @property Carbon|null $paused_at
+ * @property Carbon|null $ends_at
+ * @property Carbon|null $current_period_start_at
+ * @property Carbon|null $current_period_end_at
+ * @property-read Collection<int, SubscriptionItem> $items
+ */
 class Subscription extends Model
 {
     const STATUS_ACTIVE = 'active';
