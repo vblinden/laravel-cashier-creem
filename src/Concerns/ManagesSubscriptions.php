@@ -14,7 +14,7 @@ trait ManagesSubscriptions
 
     public function subscription($type = 'default')
     {
-        return $this->subscriptions->where('type', $type)->first();
+        return $this->subscriptions()->where('type', $type)->first();
     }
 
     public function subscribed($type = 'default', $product = null): bool
@@ -96,8 +96,8 @@ trait ManagesSubscriptions
 
     public function onProduct($product): bool
     {
-        return ! is_null($this->subscriptions->first(function (Subscription $subscription) use ($product) {
+        return $this->subscriptions()->get()->contains(function (Subscription $subscription) use ($product) {
             return $subscription->valid() && $subscription->hasProduct($product);
-        }));
+        });
     }
 }
