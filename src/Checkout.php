@@ -61,7 +61,13 @@ class Checkout
 
     public function metadata(array $metadata): self
     {
-        $this->payload['metadata'] = array_merge($this->payload['metadata'] ?? [], $metadata);
+        $protectedKeys = ['billable_id', 'billable_type'];
+
+        $existing = $this->payload['metadata'] ?? [];
+
+        $protected = array_intersect_key($existing, array_flip($protectedKeys));
+
+        $this->payload['metadata'] = array_merge($existing, $metadata, $protected);
 
         return $this;
     }
