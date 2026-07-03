@@ -77,4 +77,16 @@ return [
 
     'success_url' => env('CREEM_SUCCESS_URL'),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Billable Model
+    |--------------------------------------------------------------------------
+    |
+    | Fallback model class used when resolving billables from metadata or
+    | reference IDs. Defaults to your application's user model.
+    |
+    */
+
+    'billable_model' => env('CASHIER_BILLABLE_MODEL'),
+
 ];
