@@ -1,0 +1,63 @@
+{
+    "name": "vblinden/laravel-cashier-creem",
+    "description": "Cashier Creem provides an expressive, fluent interface to Creem's subscription billing services.",
+    "keywords": [
+        "laravel",
+        "creem",
+        "billing",
+        "cashier",
+        "subscriptions"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "vblinden"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "ext-json": "*",
+        "ext-openssl": "*",
+        "guzzlehttp/guzzle": "^7.4.5",
+        "illuminate/contracts": "^10.0|^11.0|^12.0",
+        "illuminate/database": "^10.0|^11.0|^12.0",
+        "illuminate/http": "^10.0|^11.0|^12.0",
+        "illuminate/routing": "^10.0|^11.0|^12.0",
+        "illuminate/support": "^10.0|^11.0|^12.0",
+        "moneyphp/money": "^3.2|^4.0",
+        "nesbot/carbon": "^2.67|^3.0",
+        "symfony/http-kernel": "^6.2|^7.0|^8.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^8.36|^9.15|^10.8",
+        "phpunit/phpunit": "^10.5|^11.0"
+    },
+    "suggest": {
+        "ext-intl": "Allows for more locales besides the default \"en\" when formatting money values."
+    },
+    "autoload": {
+        "psr-4": {
+            "Laravel\\Cashier\\Creem\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Laravel\\Cashier\\Creem\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "1.x-dev"
+        },
+        "laravel": {
+            "providers": [
+                "Laravel\\Cashier\\Creem\\CashierServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
