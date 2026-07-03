@@ -40,7 +40,7 @@ class Cashier
         if (! empty($metadata['billable_id']) && ! empty($metadata['billable_type'])) {
             $model = $metadata['billable_type'];
 
-            if (class_exists($model)) {
+            if (static::isAllowedBillableType($model)) {
                 return $model::find($metadata['billable_id']);
             }
         }
@@ -48,6 +48,54 @@ class Cashier
         foreach (['referenceId', 'reference_id', 'internal_customer_id', 'userId', 'user_id'] as $key) {
             if (! empty($metadata[$key]) && ($billable = static::findBillableByReference($metadata[$key]))) {
                 return $billable;
+            }
+        }
+
+        return null;
+    }
+
+    protected static function isAllowedBillableType(string $model): bool
+    {
+        if (! class_exists($model) || ! is_subclass_of($model, Model::class)) {
+            return false;
+        }
+
+        return in_array($model, static::allowedBillableTypes(), true);
+    }
+
+    protected static function allowedBillableTypes(): array
+    {
+        $types = [];
+
+        if ($billableModel = config('cashier.billable_model')) {
+            $types[] = $billableModel;
+        }
+
+        foreach (config('auth.providers', []) as $provider) {
+            if (! empty($provider['model'])) {
+                $types[] = $provider['model'];
+            }
+        }
+
+        return array_values(array_unique($types));
+    }
+
+    protected static function defaultBillableModel(): ?string
+    {
+        if ($model = config('cashier.billable_model')) {
+            return $model;
+        }
+
+        $defaultGuard = config('auth.defaults.guard');
+        $provider = config("auth.guards.{$defaultGuard}.provider");
+
+        if (is_string($provider) && ($model = config("auth.providers.{$provider}.model"))) {
+            return $model;
+        }
+
+        foreach (config('auth.providers', []) as $providerConfig) {
+            if (! empty($providerConfig['model'])) {
+                return $providerConfig['model'];
             }
         }
 
@@ -62,7 +110,7 @@ class Cashier
             return $customer->billable;
         }
 
-        $billableModel = config('cashier.billable_model', config('auth.providers.users.model'));
+        $billableModel = static::defaultBillableModel();
 
         if ($billableModel && class_exists($billableModel)) {
             return $billableModel::find($reference);
