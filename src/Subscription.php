@@ -265,7 +265,7 @@ class Subscription extends Model
                 : ($data['status'] === self::STATUS_SCHEDULED_CANCEL && isset($data['current_period_end_date'])
                     ? Carbon::parse($data['current_period_end_date'])
                     : null),
-            'paused_at' => $data['status'] === self::STATUS_PAUSED ? now() : null,
+            'paused_at' => static::resolvePausedAt($data, $this),
             'current_period_start_at' => isset($data['current_period_start_date'])
                 ? Carbon::parse($data['current_period_start_date'])
                 : null,
@@ -277,6 +277,19 @@ class Subscription extends Model
         $this->syncSubscriptionItems($data);
 
         return $this;
+    }
+
+    public static function resolvePausedAt(array $data, ?self $existing = null): ?Carbon
+    {
+        if (($data['status'] ?? null) !== self::STATUS_PAUSED) {
+            return null;
+        }
+
+        if (isset($data['paused_at'])) {
+            return Carbon::parse($data['paused_at']);
+        }
+
+        return $existing?->paused_at ?? now();
     }
 
     public function syncSubscriptionItems(array $data): void
