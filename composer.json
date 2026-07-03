@@ -19,17 +19,17 @@
         "ext-json": "*",
         "ext-openssl": "*",
         "guzzlehttp/guzzle": "^7.4.5",
-        "illuminate/contracts": "^10.0|^11.0|^12.0",
-        "illuminate/database": "^10.0|^11.0|^12.0",
-        "illuminate/http": "^10.0|^11.0|^12.0",
-        "illuminate/routing": "^10.0|^11.0|^12.0",
-        "illuminate/support": "^10.0|^11.0|^12.0",
+        "illuminate/contracts": "^10.0|^11.0|^12.0|^13.0",
+        "illuminate/database": "^10.0|^11.0|^12.0|^13.0",
+        "illuminate/http": "^10.0|^11.0|^12.0|^13.0",
+        "illuminate/routing": "^10.0|^11.0|^12.0|^13.0",
+        "illuminate/support": "^10.0|^11.0|^12.0|^13.0",
         "moneyphp/money": "^3.2|^4.0",
         "nesbot/carbon": "^2.67|^3.0",
         "symfony/http-kernel": "^6.2|^7.0|^8.0"
     },
     "require-dev": {
-        "orchestra/testbench": "^8.36|^9.15|^10.8",
+        "orchestra/testbench": "^8.36|^9.15|^10.8|^11.0",
         "phpunit/phpunit": "^10.5|^11.0"
     },
     "suggest": {
