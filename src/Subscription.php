@@ -289,7 +289,11 @@ class Subscription extends Model
             return Carbon::parse($data['paused_at']);
         }
 
-        return $existing?->paused_at ?? now();
+        if ($existing !== null && $existing->paused_at !== null) {
+            return $existing->paused_at;
+        }
+
+        return now();
     }
 
     public function syncSubscriptionItems(array $data): void
