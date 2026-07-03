@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('subscription_items', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('subscription_id');
+            $table->foreignId('subscription_id')->constrained()->cascadeOnDelete();
             $table->string('creem_id')->nullable();
             $table->string('product_id');
             $table->string('price_id')->nullable();
