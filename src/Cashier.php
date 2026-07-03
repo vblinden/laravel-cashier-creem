@@ -65,10 +65,41 @@ class Cashier
 
     protected static function allowedBillableTypes(): array
     {
-        return array_values(array_unique(array_filter([
-            config('cashier.billable_model'),
-            config('auth.providers.users.model'),
-        ])));
+        $types = [];
+
+        if ($billableModel = config('cashier.billable_model')) {
+            $types[] = $billableModel;
+        }
+
+        foreach (config('auth.providers', []) as $provider) {
+            if (! empty($provider['model'])) {
+                $types[] = $provider['model'];
+            }
+        }
+
+        return array_values(array_unique($types));
+    }
+
+    protected static function defaultBillableModel(): ?string
+    {
+        if ($model = config('cashier.billable_model')) {
+            return $model;
+        }
+
+        $defaultGuard = config('auth.defaults.guard');
+        $provider = config("auth.guards.{$defaultGuard}.provider");
+
+        if (is_string($provider) && ($model = config("auth.providers.{$provider}.model"))) {
+            return $model;
+        }
+
+        foreach (config('auth.providers', []) as $providerConfig) {
+            if (! empty($providerConfig['model'])) {
+                return $providerConfig['model'];
+            }
+        }
+
+        return null;
     }
 
     protected static function findBillableByReference(string $reference): ?Model
@@ -79,7 +110,7 @@ class Cashier
             return $customer->billable;
         }
 
-        $billableModel = config('cashier.billable_model', config('auth.providers.users.model'));
+        $billableModel = static::defaultBillableModel();
 
         if ($billableModel && class_exists($billableModel)) {
             return $billableModel::find($reference);

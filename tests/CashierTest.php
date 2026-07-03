@@ -2,6 +2,8 @@
 
 namespace Laravel\Cashier\Creem\Tests;
 
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 use Laravel\Cashier\Creem\Cashier;
 use Laravel\Cashier\Creem\RedirectSignature;
 
@@ -43,5 +45,31 @@ class CashierTest extends TestCase
         ]);
 
         $this->assertNull($billable);
+    }
+
+    public function test_it_allows_the_default_auth_provider_model(): void
+    {
+        Schema::create('members', function (Blueprint $table) {
+            $table->id();
+            $table->string('name')->nullable();
+            $table->string('email')->unique();
+            $table->timestamps();
+        });
+
+        config([
+            'cashier.billable_model' => null,
+            'auth.defaults.guard' => 'web',
+            'auth.guards.web' => ['driver' => 'session', 'provider' => 'members'],
+            'auth.providers.members' => ['driver' => 'eloquent', 'model' => Member::class],
+        ]);
+
+        $member = Member::create(['name' => 'Member', 'email' => 'member@example.com']);
+
+        $billable = Cashier::findBillableFromMetadata([
+            'billable_id' => (string) $member->id,
+            'billable_type' => Member::class,
+        ]);
+
+        $this->assertTrue($member->is($billable));
     }
 }
