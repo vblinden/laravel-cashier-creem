@@ -193,6 +193,8 @@ class WebhookController extends Controller
 
         $type = $metadata['subscription_type'] ?? Subscription::DEFAULT_TYPE;
 
+        $existing = Cashier::$subscriptionModel::where('creem_id', $data['id'])->first();
+
         $subscription = Cashier::$subscriptionModel::updateOrCreate(
             ['creem_id' => $data['id']],
             [
@@ -208,7 +210,7 @@ class WebhookController extends Controller
                     : ($data['status'] === Subscription::STATUS_SCHEDULED_CANCEL && isset($data['current_period_end_date'])
                         ? Carbon::parse($data['current_period_end_date'])
                         : null),
-                'paused_at' => $data['status'] === Subscription::STATUS_PAUSED ? now() : null,
+                'paused_at' => Subscription::resolvePausedAt($data, $existing),
                 'current_period_start_at' => isset($data['current_period_start_date'])
                     ? Carbon::parse($data['current_period_start_date'])
                     : null,
