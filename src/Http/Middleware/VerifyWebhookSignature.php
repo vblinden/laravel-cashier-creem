@@ -15,7 +15,11 @@ class VerifyWebhookSignature
         $signature = $request->header(self::SIGNATURE_HEADER);
         $secret = config('cashier.webhook_secret');
 
-        if (empty($secret) || empty($signature)) {
+        if (empty($secret)) {
+            throw new AccessDeniedHttpException('Creem webhook secret is not configured.');
+        }
+
+        if (empty($signature)) {
             throw new AccessDeniedHttpException('Invalid webhook signature.');
         }
 
