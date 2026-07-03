@@ -30,4 +30,44 @@ class RedirectSignatureTest extends TestCase
 
         $this->assertTrue(RedirectSignature::verify($params, $apiKey));
     }
+
+    public function test_it_rejects_invalid_signatures(): void
+    {
+        $params = [
+            'checkout_id' => 'ch_test',
+            'signature' => 'invalid',
+        ];
+
+        $this->assertFalse(RedirectSignature::verify($params, 'creem_test_example'));
+    }
+
+    public function test_it_rejects_missing_signatures(): void
+    {
+        $this->assertFalse(RedirectSignature::verify([
+            'checkout_id' => 'ch_test',
+        ]));
+    }
+
+    public function test_it_rejects_tampered_parameters(): void
+    {
+        $apiKey = 'creem_test_example';
+
+        $params = [
+            'checkout_id' => 'ch_test',
+            'order_id' => 'ord_test',
+        ];
+
+        $parts = [];
+
+        foreach ($params as $key => $value) {
+            $parts[] = "{$key}={$value}";
+        }
+
+        $parts[] = "salt={$apiKey}";
+
+        $params['signature'] = hash('sha256', implode('|', $parts));
+        $params['order_id'] = 'ord_tampered';
+
+        $this->assertFalse(RedirectSignature::verify($params, $apiKey));
+    }
 }
