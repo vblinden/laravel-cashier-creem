@@ -1,0 +1,15 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+    paths:
+        - src
+
+    level: 5
+
+    tmpDir: build/phpstan
+
+    ignoreErrors:
+        - '#Trait Laravel\\Cashier\\Creem\\.* is used zero times#'
+        - '#Access to an undefined property Illuminate\\Database\\Eloquent\\Model::\$customer#'
+        - '#Call to an undefined method Illuminate\\Database\\Eloquent\\Model::transactions\(\)#'

@@ -3,7 +3,6 @@
 namespace Laravel\Cashier\Creem;
 
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Arr;
 
 class Checkout
 {
@@ -15,7 +14,7 @@ class Checkout
 
     public static function create(array $payload = []): self
     {
-        return new static($payload);
+        return new self($payload);
     }
 
     public function product(string $productId): self

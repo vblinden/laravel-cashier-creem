@@ -29,6 +29,7 @@
         "symfony/http-kernel": "^6.2|^7.0|^8.0"
     },
     "require-dev": {
+        "larastan/larastan": "^3.0",
         "orchestra/testbench": "^8.36|^9.15|^10.8|^11.0",
         "phpunit/phpunit": "^10.5|^11.0"
     },
