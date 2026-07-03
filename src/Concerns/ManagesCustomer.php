@@ -91,11 +91,12 @@ trait ManagesCustomer
             throw new LogicException('Unable to generate customer portal URL without a Creem customer.');
         }
 
-        $response = Cashier::api('POST', 'customer-portal', [
+        $response = Cashier::api('POST', 'customers/billing', [
             'customer_id' => $customer->creem_id,
         ]);
 
-        return $response['customer_portal_link'] ?? $response['customerPortalLink'];
+        return $response['customer_portal_link'] ?? $response['customerPortalLink']
+            ?? throw new LogicException('Creem did not return a customer portal link.');
     }
 
     public function creemName(): ?string

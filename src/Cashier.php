@@ -124,8 +124,12 @@ class Cashier
         if ($response->failed()) {
             $body = $response->json() ?? [];
 
-            throw (new CreemException($body['message'] ?? $response->body()))
-                ->setResponse($body);
+            $message = $body['message']
+                ?? $body['error']
+                ?? (isset($body['statusCode']) ? json_encode($body) : null)
+                ?? $response->body();
+
+            throw (new CreemException($message))->setResponse($body);
         }
 
         return $response->json() ?? [];
