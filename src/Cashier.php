@@ -104,7 +104,7 @@ class Cashier
             throw new Exception('Creem API key not set.');
         }
 
-        $request = Http::withHeaders([
+        $request = Http::timeout((int) config('cashier.http_timeout', 30))->withHeaders([
             'x-api-key' => config('cashier.api_key'),
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
