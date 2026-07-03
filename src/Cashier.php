@@ -40,7 +40,7 @@ class Cashier
         if (! empty($metadata['billable_id']) && ! empty($metadata['billable_type'])) {
             $model = $metadata['billable_type'];
 
-            if (class_exists($model)) {
+            if (static::isAllowedBillableType($model)) {
                 return $model::find($metadata['billable_id']);
             }
         }
@@ -52,6 +52,23 @@ class Cashier
         }
 
         return null;
+    }
+
+    protected static function isAllowedBillableType(string $model): bool
+    {
+        if (! class_exists($model) || ! is_subclass_of($model, Model::class)) {
+            return false;
+        }
+
+        return in_array($model, static::allowedBillableTypes(), true);
+    }
+
+    protected static function allowedBillableTypes(): array
+    {
+        return array_values(array_unique(array_filter([
+            config('cashier.billable_model'),
+            config('auth.providers.users.model'),
+        ])));
     }
 
     protected static function findBillableByReference(string $reference): ?Model

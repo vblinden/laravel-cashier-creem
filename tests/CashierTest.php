@@ -34,4 +34,14 @@ class CashierTest extends TestCase
 
         $this->assertTrue($user->is($billable));
     }
+
+    public function test_it_rejects_disallowed_billable_types_from_metadata(): void
+    {
+        $billable = Cashier::findBillableFromMetadata([
+            'billable_id' => '1',
+            'billable_type' => \stdClass::class,
+        ]);
+
+        $this->assertNull($billable);
+    }
 }
